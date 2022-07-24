@@ -1,0 +1,29 @@
+1A. There is memory and the address range for P1 is 0.
+
+1B. There is memory and the address range for P2 is 6-8
+since the should be at least 3 MB.
+
+1C. There is no memory space for it, since there are no
+longer 3 contiguous spaces available.
+
+1D. The internal fragmentation for P1 is 2MB. The internal
+fragmentation for P2 is 1MB. Since P3 wasn't allocated 
+there is no internal fragmentation. The total fragmentation
+is 3MB. 
+
+1E. The external fragmentation in total is 3MB, since address 3,
+4, and 9 are free. 
+
+2A.
+
+Access & Physical Success
+logical Segment Offset Base Offset address or
+address bit(s) bit(s) (in hex) (in hex) (in hex) Error
+r 0xE5 = 1 | 1100101 ; 0x36 + 0x65 = 0x9B (S)
+w 0x4A = 0 | 1001010 ; 0xA8 + 0x4A = 0xF2 (E)
+r 0x37 = 0 | 0110111 ; 0xA8 + 0x37 = 0xDF (S)
+
+2B. 
+Since there are 8 bit addresses and 1 bit describes the segment,
+there are 7 bits left for offset bits. This means the largest 
+possible size of a segment would be 128 bytes since 2^7 is 128.

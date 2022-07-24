@@ -1,0 +1,29 @@
+1A. 100 clients * 50 bytes lost means 
+a memory leak of 5000 bytes lost, because
+a file descriptor table is copied for each child.
+
+B. There will be no memory leakage because the child
+cannot interact with the parent's port since we've 
+removed close. 
+
+
+Variable   Referenced by main    Referenced by peer   Referenced by peer
+instance        thread?               thread 0?            thread 1?
+--------------------------------------------------------------------------
+cnt.t0             NO                    YES                  NO
+cnt.t1             NO                    NO                   YES
+i.m                YES                   YES                  YES
+msgs.m             YES                   YES                  YES
+myid.t0            NO                    YES                  NO
+myid.t1            NO                    NO                   YES
+
+
+3A.
+Thread 1 has: af, ae, ab, ad, bd, ac, bc
+Thread 2 has: dc, db, de, be, df, bf
+
+3B. Even though the two threads overlap at pair BD/DB, they
+don't lock in the same order.
+
+3C. Since the two don't lock in the same order, there could be
+a deadlock

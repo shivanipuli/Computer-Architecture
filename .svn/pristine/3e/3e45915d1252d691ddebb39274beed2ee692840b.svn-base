@@ -1,0 +1,205 @@
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+void myPrint(char *msg)
+{
+    write(STDOUT_FILENO, msg, strlen(msg));
+}
+
+char** parse(char *msg, char *delim){
+    char **l = (char**)malloc(sizeof(char*)*strlen(msg));
+    char *lines= strtok(msg,delim);
+    int ind=0;
+        while(lines!=NULL){
+            l[ind]=lines;
+            ind++;
+            lines=strtok(NULL,delim);
+        }
+    return l;
+}
+
+char* pwd(){
+    char* cwd = (char*)malloc(sizeof(char)*1024);
+    getcwd(cwd,1024);
+    myPrint(cwd);
+    myPrint("\n");
+    return cwd;
+}
+
+int cd(char *arg){
+    if(!arg){
+        chdir(getenv("HOME")); 
+        return 2;
+    }
+    return chdir(arg)+1;
+}
+
+void exec(char **args){
+    int status;
+    int p=fork();
+    /*int output = dup(1);
+	int fd[2];
+	
+	if((pipe(fd)) < 0){
+		char error_message[30] = "An error has occurred\n";
+            write(STDOUT_FILENO, error_message, strlen(error_message));
+            exit(2);
+	}*/
+
+    if(p==0){//child
+        //int err = dup(2);
+        if(execvp(args[0],args)==-1){
+            char error_message[30] = "An error has occurred\n";
+            write(STDOUT_FILENO, error_message, strlen(error_message));
+            exit(0);
+        }
+        /*dup2(output, STDOUT_FILENO);
+        dup2(err, STDERR_FILENO);*/
+        exit(0);
+    }    
+    else{ // parent
+        //wait(NULL);
+        waitpid(p,&status,WCONTINUED);
+    }
+}
+
+char* exec_cmd(char **cmds, int last_ind){
+    if(!cmds[0]){
+        return NULL;
+    }
+    //Built in commands
+    if(strcmp(cmds[0],"exit")==0){
+        exit(0);
+    }
+    else if(strcmp(cmds[0],"pwd")==0){
+        return pwd();
+    }
+    else if(strcmp(cmds[0],"cd")==0){
+        if(last_ind>1){
+            char error_message[30] = "too many args for cd";//"An error has occurred\n";
+            write(STDOUT_FILENO, error_message, strlen(error_message));
+            return NULL;
+        }
+        if(last_ind==0){//if(no args) for cd
+            cd(NULL);
+            return NULL;
+        }
+        int succ = cd(cmds[1]); //if 1 arg for cd
+        if(!succ){
+            char error_message[30] = "An error has occurred\n";
+            write(STDOUT_FILENO, error_message, strlen(error_message));
+            return NULL;
+        }
+        return NULL;
+    }
+    exec(cmds);
+    return NULL;
+}
+
+
+int main(int argc, char *argv[]) 
+{
+    char cmd_buff[514];
+    char *pinput;
+    FILE *file;
+    
+    if(argc==2){  // batch mode
+        file = fopen(argv[1], "r");
+        if(!file)
+            exit(2);
+    }
+    else if(argc>2){ //error
+        char error_message[30] = "An error has occured\n";
+        write(STDOUT_FILENO, error_message, strlen(error_message));
+        exit(2);
+    }
+    else{ //interactive mode
+        file = stdin;
+    }
+
+    while (1) {
+        if(file==stdin)
+            myPrint("myshell> ");
+        pinput = fgets(cmd_buff, 514, file);
+        if (!pinput) {
+            exit(0);
+        }
+	if(strlen(cmd_buff)>514){
+		char error_message[30] = "An error has occurred\n";
+        	write(STDOUT_FILENO, error_message, strlen(error_message));
+        	break;
+	}
+        if(file!=stdin){
+            myPrint(cmd_buff);
+        }
+        //char *lines= strtok(cmd_buff,"\n;");
+        //while(lines!=NULL){ 
+        char **lines=parse(strdup(cmd_buff),"\n;");
+        int line_ind=0;
+        while(lines[line_ind]!=NULL){
+            char *line = strdup(lines[line_ind]);
+            line_ind++;
+
+            char* output=NULL;
+            char **redir =parse(line,">");
+            int redir_ind=0;
+            while(redir[redir_ind]!=NULL){
+                char *cmd = strdup(redir[redir_ind]);
+                redir_ind++;
+
+                char **args=parse(cmd," \f\r\v\t");
+                
+                int last_ind=0;
+                while(args[last_ind]!=NULL){
+                    last_ind++;
+                }
+                /*if(output!=NULL)
+                    args[last_ind]=output;
+                else*/
+                    last_ind--;
+                output = exec_cmd(args,last_ind);
+		if(output==NULL){}
+            }
+        }
+            //char *output=NULL;
+            /*char *redir = strtok(strdup(lines),">");
+            while(redir!=NULL){ //Step 2: seperate redirects
+                myPrint(redir);
+                myPrint("\n");
+                char **command= (char**)malloc(sizeof(char*)*strlen(redir));
+                int ind=0;
+                command[ind] = strtok(strdup(redir)," \f\r\v\t");
+                while(command[ind]){ //Step 3: seperate args
+                    //do command
+                    ind++;
+                    command[ind] = strtok(NULL," \f\r\v\t");
+                }
+                if(output!=NULL){//set last arg to equal output of prev
+                    command[ind]=output;
+                }
+                else
+                    ind--;
+
+                output = exec_cmd(command,ind);
+                if(output){
+                    //myPrint(output);
+                    //myPrint("\n");
+                }
+                redir = strtok(NULL,">");
+            }*/
+            //myPrint(lines);
+            //myPrint("\n");
+            //lines = strtok (NULL, ";\n");
+            //}
+        //myPrint(cmd_buff);
+    }
+}
+
+
+

@@ -1,0 +1,21 @@
+Suppose that an instruction representing “idivl %ebx” is at address 0x08031000, and that the address
+of the exception handler divideByZero is 0xC0015200.
+A. Suppose %ebx is zero, show the relevant entry in the exception table built into the hardware.
+The value 0xC0015200 would be stored in the exception table address of 0.
+
+_________________________________________________
+| Exception | Description           |Actual      |
+| Number    |                       | Function   |
+_________________________________________________
+|  0        | Divide by zero handler| 0xC0015200 |
+__________________________________________________
+
+B. Suppose that %ebx is zero, that %eip is 0x08031000, and the CPU is about to start executing the cur-
+rent instruction. Describe the subsequent sequence of actions happening on the CPU up until and including
+the execution of the first instruction of divideByZero. Include the specific addresses given above, and
+how they are used.
+
+The %eip counter tells the CPU to execute the instructions in address number 0x08031000. The CPU will try
+to execute the idivl %ebx which creates a dividebyzero. This interrupts the regular control flow and moves
+to the exception control flow, specifically executing execution number 0 which is correlated with the 
+divideByZero exception. The exception handler then runs the instruction at address number 0xC0015200.

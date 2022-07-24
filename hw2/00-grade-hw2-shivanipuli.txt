@@ -1,0 +1,21 @@
+shivanipuli hw2 grade: 32/34
+
+Graded files from svn revision 12
+
+--------------------------------------
+Question 1 points and comments: 14/14
+Great Job!
+
+Graded by: Rondavid Babiera (rdbabiera)
+--------------------------------------
+
+Question 2 points and comments: 18/20
+
+2D - partial correct (value = 0xBE)
+2J - partial correct (value = 0x21)
+
+Graded by: Qizheng Zhang (qizhengz)
+--------------------------------------
+
+If you believe there is an error in how you were graded, you have a week,
+starting from when this grade was returned, to notify us via email.

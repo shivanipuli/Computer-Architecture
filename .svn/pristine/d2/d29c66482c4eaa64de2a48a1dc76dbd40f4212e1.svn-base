@@ -1,0 +1,117 @@
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+
+void myPrint(char *msg)
+{
+    write(STDOUT_FILENO, msg, strlen(msg));
+}
+
+void error(){
+    myPrint("An error has occurred\n");
+}
+
+char* pwd(){
+    char* cwd = (char*)malloc(sizeof(char)*1024);
+    getcwd(cwd,1024);
+    return cwd;
+}
+
+int cd(char *arg){
+    if(!arg)
+        arg=getenv("HOME");
+    return chdir(arg)+1;
+}
+
+char* exec_cmd(char **cmds){
+    if(!cmds[0]){
+        return NULL;
+    }
+    
+    //Built in commands
+    if(strcmp(cmds[0],"exit")==0){
+        exit(0);
+    }
+    else if(strcmp(cmds[0],"pwd")==0){
+        return pwd();
+    }
+    else if(strcmp(cmds[0],"cd")==0){
+        if(cmds[2]){
+            char error_message[30] = "An error has occurred\n";
+            write(STDOUT_FILENO, error_message, strlen(error_message));
+            return NULL;
+        }
+        if(!cmds[1]){
+            cd(NULL);
+            return NULL;
+	}
+        int succ = cd(cmds[1]);
+        if(succ){}
+        return NULL;
+    }
+    return NULL;
+}
+
+
+int main(int argc, char *argv[]) 
+{
+    char cmd_buff[514];
+    char *pinput;
+    FILE *file;
+    
+    if(argc==2){  // batch mode
+        file = fopen(argv[1], "r");
+        if(!file)
+            exit(2);
+    }
+    else if(argc>2){ //error
+        char error_message[30] = "An error has occurred\n";
+        write(STDOUT_FILENO, error_message, strlen(error_message));
+        exit(2);
+    }
+    else{ //interactive mode
+        file = stdin;
+    }
+
+    while (1) {
+        if(file==stdin)
+            myPrint("myshell> ");
+        pinput = fgets(cmd_buff, 514, file);
+        if (!pinput) {
+            exit(0);
+        }
+        else if (cmd_buff[513]){
+            myPrint("An error has occurred\n");
+            //write(STDOUT_FILENO, error_message, strlen(error_message));
+            exit(2);
+        }
+        char *lines= strtok(cmd_buff,"\n;");
+        while(lines){ //Step 1: separate lines
+            myPrint(lines);
+            myPrint("\n");
+            char *redir = strtok(lines,">");
+            while(redir){ //Step 2: seperate redirects
+                char **commands= (char**)malloc(sizeof(char*)*strlen(redir));
+                int ind=0;
+                commands[ind] = strtok(redir," \f\r\v\t");
+                while(commands[ind]){ //Step 3: seperate commands
+                    //do command
+                    ind++;
+                    commands[ind] = strtok(NULL," \f\r\v\t");
+                }
+                char *output = exec_cmd(commands);
+                if(output){
+                    myPrint(output);
+                    myPrint("\n");
+                }
+                redir = strtok(NULL,">");
+            }
+            lines = strtok (NULL, ";\n");
+            }
+        //myPrint(cmd_buff);
+    }
+}
+

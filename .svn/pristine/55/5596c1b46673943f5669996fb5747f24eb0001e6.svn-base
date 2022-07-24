@@ -1,0 +1,24 @@
+shivanipuli hw1 grade: 17/20
+
+Graded files from svn revision 6
+
+--------------------------------------
+Question 1 points and comments: 7/10
+
+-2 points:   did not use pointers (e.g., (char *))
+-1 point:    code can not correctly identify the endianness 
+
+In your code, endian will always be 0 since what you are doing is essentially endian = !1. You need to do something like &foo to access its address.
+
+Graded by: Yuxin Guan (yguan1)
+--------------------------------------
+
+Question 2 points and comments: 10/10
+
+Nice work!
+
+Graded by: Anjali Pullabhotla (apullabhotla)
+--------------------------------------
+
+If you believe there is an error in how you were graded, you have a week,
+starting from when this grade was returned, to notify us via email.

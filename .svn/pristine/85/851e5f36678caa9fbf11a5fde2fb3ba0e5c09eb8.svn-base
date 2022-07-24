@@ -1,0 +1,20 @@
+shivanipuli p3cache grade: 0/100 
+ 
+https://phoenixforge.cs.uchicago.edu/svn/shivanipuli-cs154-spr-20/p3cache 
+Grading revision: 44 
+
+Comments: Code failed to compile using gcc on CSIL machine.  As stated in the assignment description, code that does not compile will receive no credit. 
+
+$ make
+gcc -g -Wall -Werror -std=c99 -o csim csim.c cachelab.c -lm
+csim.c: In function ‘main’:
+csim.c:56:13: error: variable ‘h’ set but not used [-Werror=unused-but-set-variable]
+   56 |     int v=0,h=0;
+      |             ^
+csim.c:56:9: error: variable ‘v’ set but not used [-Werror=unused-but-set-variable]
+   56 |     int v=0,h=0;
+      |         ^
+cc1: all warnings being treated as errors
+make: *** [Makefile:15: csim] Error 1
+
+Final Grade: 0

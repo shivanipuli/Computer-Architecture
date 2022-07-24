@@ -1,0 +1,15 @@
+1.
+foo = 1 // 0X00000001
+endian = !foo;
+If big endian, first value stored is 01. if little, first value in address is 00. 
+So in print statement when asked endian? if the value>0 (is 01) and if
+the value was 00 (endian? = False) then it is little endian.
+
+2. 
+
+A. !(!x)
+B. !!(~x)
+C. !!(x&0XFFFF)
+D. !!((~x)&0XFFFF)
+E. !!(x&0XAAAAAAAA)
+F. !!(x & (0XF << (sizeof(int)*8-4)))

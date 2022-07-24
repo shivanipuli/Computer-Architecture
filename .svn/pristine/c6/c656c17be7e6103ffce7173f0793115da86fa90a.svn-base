@@ -1,0 +1,36 @@
+1A. tttt tttt ssbb
+
+1B. 
+Op Address H/M Value
+R   0x831  H    0x27
+R   0x00B  H    0x58
+R   0x006  H    0x56
+R   0xFFE  H    0x08
+R   0x54E  M    unknown
+W   0x54C  H    n/a
+W   0x007  H    n/a
+R   0x44C  M    unknown
+R   0xFFD  H    0xF1
+
+2A. There will be a 100% miss rate. Since the size of an int is 4 bytes and512 
+bytes total, 128 ints total will be mapped to the cache meaning that x[0][i]
+and x[1][i] will map to the same block. This means after each cold miss at
+x[0][i] you will have a conflict miss right after with x[1][i], and the cycle
+will continue for all 128 i values. 
+
+2B. The miss rate will be 25%. With 1024 total bytes in the cache, now all 
+256 ints can fit into the cache meaning that there will be no conflicts and
+the only misses will be the initial cold misses. Since each block is 16 bytes,
+there will be 4 ints per block meaning only the first of the 4 sequential ints
+will be a miss making it a 25% miss rate.
+
+2C. The miss rate is 25% here as well. Unlike part A, with two way associative,
+there won't a conflict miss so only the only misses will be the cold misses by
+the first of the 4 ints in a block. At i=64 the cache will fill and then there
+will be capacity misses which will once again be at a 25% miss rate. 
+
+2D. No, because regardless of the cache size, you will still encounter cold misses,
+SO your miss rate can't go lower than 25%.
+
+2E. Yes, because you can store more ints in once block, decreasing the amount of 
+cold misses.

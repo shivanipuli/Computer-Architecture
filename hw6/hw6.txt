@@ -1,0 +1,53 @@
+A.
+Line Number           Process          Line           Forkret
+1                     P                19             0
+2                     P                26             102
+3                     C                22             0
+4                     P                11             102
+5                     C                11             0
+6                     C                13             0
+7                     P                29             102
+
+
+
+B.
+Line Number           Process          Line           Forkret
+1                     P                19             0
+2                     P                26             102
+3                     C                22             0
+4                     C                11             0
+5                     C                13             0
+6                     P                29             102
+In this run, the race condition is between kill calls in line 23 
+and line 27. The kill call from the parent process wins the race,
+so the handler is run by the child which why it's PID 102 is 
+printed before handler1 and the child's kill call for the parent
+to run the handler was stopped. Since the parent process was waiting,
+the main function finishes executing and exits.
+
+C.
+Line Number           Process          Line           Forkret
+1                     P                19             0
+2                     P                26             102
+3                     C                11             0
+4                     C                13             0
+5                     P                29             102
+The race condition is between line 22 and line 27. The parent's kill call on
+line 27 wins against the child's printf statement so (102) handler1 is 
+outputted in the child process. It then prints seeys and exits and returns to
+main function, where the waiting parent process prints child done and then exits
+itself.
+
+D.
+Line Number           Process          Line           Forkret
+1                     P                19             0
+2                     C                22             0
+3                     P                11             0
+4                     P                13             0
+The race condition is between on line 21 which assigns forkret 
+and line 23 that calls the kill function from the child process.
+The child wins so line 3 outputs 101 the parent pid and handler1. 
+Since the child wins, forkret is never assigned a value so it 
+remains 0 so the handler1 function prints (102) seeya and then 
+exits. The forkret remains 0 so the else condition is not satisfied
+in the main function and the parent process exits.

@@ -1,0 +1,24 @@
+shivanipuli hw4 grade: 42/43
+
+Graded files from svn revision 22
+
+--------------------------------------
+Question 1 points and comments: 22/23
+
+1A - correct
+-1 point: 1B - partially correct 
+
+last read should be a miss  
+
+Graded by: Kevin  Liu (kliu709)
+--------------------------------------
+
+Question 2 points and comments: 20/20
+
+Good job!
+
+Graded by: Shayna Kaushal (shaynak)
+--------------------------------------
+
+If you believe there is an error in how you were graded, you have one day,
+starting from when this grade was returned, to notify us via Ed post.

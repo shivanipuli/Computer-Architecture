@@ -1,0 +1,35 @@
+
+A. Which registers hold program values x, n, result, and mask?
+    x=rdi, n = rsi, result = rcx, mask = rdx
+B. What are the initial values of result and mask? 
+    result = 0, mask = 3
+C. What is the test condition for mask?
+    check if mask !=0
+D. How does mask get updated?
+    in line 10, mask = mask << n
+E. How does result get updated?
+    in line 6, when the return value %rax gets moved to rcx register
+F. Fill in all the missing parts of the C code, by providing the entire contents of the 1 , 2 , etc blanks.
+
+long result = 0;
+for(mask = 3; mask!=0;mask = mask << n){
+    result = (mask | x) & result;
+}
+return result;
+
+funcQ(long x, long y){
+    return y*3 + x;
+}
+
+funcP(long r, long s, long t){
+    if(s<=0){
+        long result = r;
+        r = s;
+        s = result;
+        return funcQ(r,s)+t;
+    }
+    long result = t;
+    t = r;
+    r = result;
+    return funcQ(r,s)+t;
+}

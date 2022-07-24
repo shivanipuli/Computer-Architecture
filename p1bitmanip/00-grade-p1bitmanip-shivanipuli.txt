@@ -1,0 +1,129 @@
+shivanipuli p1bitmanip grade: 71/103 
+ 
+https://phoenixforge.cs.uchicago.edu/svn/shivanipuli-cs154-spr-22/p1bitmanip 
+Grading revision: 14 
+
+$ make
+gcc -O0 -Wall -lm -o btest bits.c btest.c decl.c tests.c
+bits.c: In function ‘conditional’:
+bits.c:236:19: warning: suggest parentheses around arithmetic in operand of ‘|’ [-Wparentheses]
+  236 |   return (~istrue)&z | istrue & y;
+      |          ~~~~~~~~~^~
+bits.c: In function ‘ezThreeFourths’:
+bits.c:253:15: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+  253 |   return (sum + sign & 3) >> 2;
+      |           ~~~~^~~~~~
+bits.c: In function ‘isPower2’:
+bits.c:371:32: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+  371 |   return ispos & !(x & (~1 +1) + x) & iszero;
+      |                        ~~~~~~~~^~~
+bits.c: In function ‘satMul2’:
+bits.c:420:32: warning: suggest parentheses around arithmetic in operand of ‘^’ [-Wparentheses]
+  420 |   return (x<<2) ^ (sign^maxbit)&(x^maxbit^0x80000000);
+      |                   ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+gcc -O0 -Wall -o ishow ishow.c
+
+$ ./driver.pl
+1. Running './dlc -z' to identify coding rules violations.
+bits.c:236: Warning: suggest parentheses around arithmetic in operand of |
+bits.c:236: Warning: suggest parentheses around arithmetic in operand of |
+bits.c:420: Warning: suggest parentheses around arithmetic in operand of ^
+
+Compilation Successful (3 warnings)
+dlc:bits.c:280:getByte: Illegal operator (*)
+dlc:bits.c:281:getByte: Zapping function body!
+dlc:bits.c:305:implication: Illegal operator (&)
+dlc:bits.c:306:implication: Zapping function body!
+dlc:bits.c:404:rotateLeft: Illegal operator (-)
+dlc:bits.c:404:rotateLeft: Illegal operator (-)
+dlc:bits.c:406:rotateLeft: Zapping function body!
+dlc:bits.c:420:satMul2: Illegal constant (0x80000000) (only 0x0 - 0xff allowed)
+dlc:bits.c:421:satMul2: Zapping function body!
+
+2. Compiling and running './btest -g' to determine correctness score.
+gcc -O0 -Wall -lm -o btest bits.c btest.c decl.c tests.c 
+bits.c: In function ‘conditional’:
+bits.c:236:19: warning: suggest parentheses around arithmetic in operand of ‘|’ [-Wparentheses]
+bits.c: In function ‘ezThreeFourths’:
+bits.c:253:15: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+bits.c: In function ‘isPower2’:
+bits.c:371:32: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+bits.c: In function ‘rotateLeft’:
+bits.c:404:7: warning: unused variable ‘torot’ [-Wunused-variable]
+bits.c: In function ‘satMul2’:
+bits.c:419:7: warning: unused variable ‘maxbit’ [-Wunused-variable]
+bits.c:418:7: warning: unused variable ‘sign’ [-Wunused-variable]
+
+3. Running './dlc -Z' to identify operator count violations.
+save-bits.c:236: Warning: suggest parentheses around arithmetic in operand of |
+save-bits.c:236: Warning: suggest parentheses around arithmetic in operand of |
+save-bits.c:420: Warning: suggest parentheses around arithmetic in operand of ^
+
+Compilation Successful (3 warnings)
+dlc:save-bits.c:280:getByte: Illegal operator (*)
+dlc:save-bits.c:281:getByte: Zapping function body!
+dlc:save-bits.c:305:implication: Illegal operator (&)
+dlc:save-bits.c:306:implication: Zapping function body!
+dlc:save-bits.c:404:rotateLeft: Illegal operator (-)
+dlc:save-bits.c:404:rotateLeft: Illegal operator (-)
+dlc:save-bits.c:406:rotateLeft: Zapping function body!
+dlc:save-bits.c:420:satMul2: Illegal constant (0x80000000) (only 0x0 - 0xff allowed)
+dlc:save-bits.c:421:satMul2: Zapping function body!
+
+4. Compiling and running './btest -g -r 2' to determine performance score.
+gcc -O0 -Wall -lm -o btest bits.c btest.c decl.c tests.c 
+save-bits.c: In function ‘conditional’:
+save-bits.c:236:19: warning: suggest parentheses around arithmetic in operand of ‘|’ [-Wparentheses]
+  236 |   return (~istrue)&z | istrue & y;
+      |          ~~~~~~~~~^~
+save-bits.c: In function ‘ezThreeFourths’:
+save-bits.c:253:15: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+  253 |   return (sum + sign & 3) >> 2;
+      |           ~~~~^~~~~~
+save-bits.c: In function ‘isPower2’:
+save-bits.c:371:32: warning: suggest parentheses around ‘+’ in operand of ‘&’ [-Wparentheses]
+  371 |   return ispos & !(x & (~1 +1) + x) & iszero;
+      |                       ~~~~~~~~~^~~
+save-bits.c: In function ‘rotateLeft’:
+save-bits.c:404:7: warning: unused variable ‘torot’ [-Wunused-variable]
+  404 |   int torot = (x >> (32-n))& ~((-1 >> n) << n);
+      |       ^~~~~
+save-bits.c: In function ‘satMul2’:
+save-bits.c:419:7: warning: unused variable ‘maxbit’ [-Wunused-variable]
+  419 |   int maxbit=(x<<1) >> 31;
+      |       ^~~~~~
+save-bits.c:418:7: warning: unused variable ‘sign’ [-Wunused-variable]
+  418 |   int sign = x >> 31;
+      |       ^~~~
+
+
+5. Running './dlc -e' to get operator count of each function.
+
+Correctness Results	Perf Results
+Points	Rating	Errors	Points	Ops	Puzzle
+4	4	0	2	3	absVal
+3	3	0	2	6	addOK
+2	2	0	2	9	allEvenBits
+4	4	0	2	6	bang
+4	4	0	2	39	bitCount
+1	1	0	2	3	bitNor
+2	2	0	2	12	byteSwap
+3	3	0	2	7	conditional
+0	3	1	0	6	ezThreeFourths
+2	2	0	2	7	fitsBits
+0	2	1	0	0	getByte
+0	4	1	0	0	greatestBitPos
+0	2	1	0	0	implication
+3	3	0	2	13	isAsciiDigit
+2	2	0	2	4	isEqual
+3	3	0	2	11	isLess
+3	3	0	2	3	isNonNegative
+4	4	0	2	13	isPower2
+0	1	1	0	4	isTmin
+1	1	0	2	1	minusOne
+0	3	1	0	7	rotateLeft
+0	3	1	0	3	satMul2
+
+Score = 71/103 [41/59 Corr + 30/44 Perf] (157 total operators)
+
+Final Grade: 71/103
